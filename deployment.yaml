@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,8 +14,8 @@ spec:
         app: seleniumdemo
     spec:
       containers:
-  - name: seleniumdemo
-    image: seleniumdemo:v1
-    imagePullPolicy: Never
-    ports:
-      - containerPort: 5001
+        - name: seleniumdemo
+          image: seleniumdemo:v1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5001
