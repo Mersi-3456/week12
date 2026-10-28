@@ -25,15 +25,17 @@ pipeline {
             }
         }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                bat 'kubectl apply -f deployment.yaml'
-                bat 'kubectl apply -f service.yaml'
-                bat 'kubectl rollout status deployment/seleniumdemo --timeout=120s'
-                bat 'kubectl get pods'
-                bat 'kubectl get services'
-            }
-        }
+        
+stage('Deploy to Kubernetes') {
+    steps {
+        bat 'kubectl apply -f deployment.yaml'
+        bat 'kubectl apply -f service.yaml'
+        bat 'kubectl rollout status deployment/seleniumdemo-deployment --timeout=120s'
+        bat 'kubectl get pods'
+        bat 'kubectl get services'
+    }
+}
+
     }
 
     post {
