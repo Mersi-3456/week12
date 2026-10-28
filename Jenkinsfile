@@ -5,30 +5,31 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                echo 'Installing Python dependencies'
                 bat 'python -m pip install -r requirements.txt'
             }
         }
 
-        stage('Run Selenium Tests') {
+        stage('Start Flask and Run Tests') {
             steps {
-                echo 'Running registration tests'
-                bat 'python -m pytest -v tests/test_register.py'
+                bat '''
+                    start "FlaskApp" /B python app.py
+                    timeout /t 5 /nobreak
+                    python -m pytest -v tests/test_register.py
+                '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image'
                 bat 'docker build -t seleniumdemo:v1 .'
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying application'
                 bat 'kubectl apply -f deployment.yaml'
                 bat 'kubectl apply -f service.yaml'
+                bat 'kubectl rollout status deployment/seleniumdemo --timeout=120s'
                 bat 'kubectl get pods'
                 bat 'kubectl get services'
             }
@@ -39,9 +40,8 @@ pipeline {
         success {
             echo 'Pipeline completed successfully!'
         }
-
         failure {
-            echo 'Pipeline failed. Check the console output.'
+            echo 'Pipeline failed. Check Console Output.'
         }
     }
 }
