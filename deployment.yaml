@@ -13,7 +13,8 @@ spec:
         app: seleniumdemo
     spec:
       containers:
-        - name: seleniumdemo
-          image: mersineelakantam/simple-demo:seleniumimage
-          ports:
-            - containerPort: 5000
+  - name: seleniumdemo
+    image: seleniumdemo:v1
+    imagePullPolicy: Never
+    ports:
+      - containerPort: 5001
