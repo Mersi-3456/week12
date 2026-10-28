@@ -13,7 +13,7 @@ pipeline {
             steps {
                 bat '''
                     start "FlaskApp" /B python app.py
-                    timeout /t 5 /nobreak
+                    powershell -NoProfile -Command "Start-Sleep -Seconds 5"
                     python -m pytest -v tests/test_register.py
                 '''
             }
@@ -25,17 +25,15 @@ pipeline {
             }
         }
 
-        
-stage('Deploy to Kubernetes') {
-    steps {
-        bat 'kubectl apply -f deployment.yaml'
-        bat 'kubectl apply -f service.yaml'
-        bat 'kubectl rollout status deployment/seleniumdemo-deployment --timeout=120s'
-        bat 'kubectl get pods'
-        bat 'kubectl get services'
-    }
-}
-
+        stage('Deploy to Kubernetes') {
+            steps {
+                bat 'kubectl apply -f deployment.yaml'
+                bat 'kubectl apply -f service.yaml'
+                bat 'kubectl rollout status deployment/seleniumdemo-deployment --timeout=120s'
+                bat 'kubectl get pods'
+                bat 'kubectl get services'
+            }
+        }
     }
 
     post {
